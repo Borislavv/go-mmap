@@ -7,6 +7,11 @@ import (
 
 // Read is take a path to file, number of readers and size of chunk.
 func Read(path string, readers int, chunkSize int64) (chunksCh chan []byte, closeFunc func(), err error) {
+	pageSize := int64(syscall.Getpagesize())
+	if chunkSize%pageSize != 0 {
+		chunkSize = ((chunkSize / pageSize) + 1) * pageSize
+	}
+
 	fd, err := syscall.Open(path, syscall.O_RDONLY, 0)
 	if err != nil {
 		return nil, nil, err
