@@ -7,8 +7,11 @@ import (
 )
 
 const (
-	// on the 1.000.000.000 rows it's working approximately for 0.016-0.024ms.
-	// on my macbook M2 Max for [./main  0.01s user 0.02s system 160% cpu 0.016 total]
+	// on the 1.000.000.000 rows it's working approximately for 0.025ms.
+	// on my macbook M2 Max for:
+	//	- ./main  0,02s user 0,02s system 170% cpu 0,024 total
+	//  - ./main  0,02s user 0,02s system 169% cpu 0,024 total
+	//  - ./main  0,02s user 0,02s system 163% cpu 0,025 total
 	path          = "1-000-000-000-rows-file.txt"
 	workerCount   = 24
 	readBlockSize = 2048 * 2048
