@@ -9,12 +9,12 @@ import (
 const (
 	// on the 1.000.000.000 rows it's working approximately for 0.025ms.
 	// on my macbook M2 Max for:
-	//	- ./main  0,02s user 0,02s system 170% cpu 0,024 total
-	//  - ./main  0,02s user 0,02s system 169% cpu 0,024 total
-	//  - ./main  0,02s user 0,02s system 163% cpu 0,025 total
-	path        = "1-000-000-000-rows-file.txt"
+	//	- ./main  0,01s user 0,01s system 96% cpu 0,012 total
+	//  - ./main  0,01s user 0,01s system 99% cpu 0,016 total
+	//  - ./main  0,01s user 0,01s system 98% cpu 0,021 total
+	path        = "1-000-000-000.txt"
 	workerCount = 24
-	chunkSize   = 2048 * 2048
+	chunkSize   = 4096 * 4096
 )
 
 func main() {
