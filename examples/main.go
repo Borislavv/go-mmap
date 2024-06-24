@@ -12,13 +12,13 @@ const (
 	//	- ./main  0,02s user 0,02s system 170% cpu 0,024 total
 	//  - ./main  0,02s user 0,02s system 169% cpu 0,024 total
 	//  - ./main  0,02s user 0,02s system 163% cpu 0,025 total
-	path          = "1-000-000-000-rows-file.txt"
-	workerCount   = 24
-	readBlockSize = 2048 * 2048
+	path        = "1-000-000-000-rows-file.txt"
+	workerCount = 24
+	chunkSize   = 2048 * 2048
 )
 
 func main() {
-	chunksCh, closeFunc, err := mmap.Read(path, workerCount, readBlockSize)
+	chunksCh, closeFunc, err := mmap.Read(path, workerCount, chunkSize)
 	if err != nil {
 		panic(err)
 	}
