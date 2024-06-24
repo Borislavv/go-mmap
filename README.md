@@ -10,5 +10,6 @@
 
 Approximately it's working for 0,017ms.
 
-P.S. But this method is ineffective if you have heavy work on the received data (that is, if you use data either from the end or from the beginning of the slice). This is due to the way the file is mapped into memory, thus making the processor cache less efficient.
+# P.S. 
+But this method is ineffective if you have heavy work on the received data (that is, if you use data either from the end or from the beginning of the slice). This is due to the way the file is mapped into memory, thus making the processor cache less efficient.
 In that case, I would recommend considering using syscall.Pread with offsets.
