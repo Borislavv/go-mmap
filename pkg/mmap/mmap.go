@@ -29,10 +29,8 @@ func Read(path string, readers int, chunkSize int64) (chunksCh chan []byte, clos
 		_ = syscall.Munmap(data)
 	}
 
-	offsetsCh := make(chan int64, readers)
-	defer close(offsetsCh)
-
 	chunksCh = make(chan []byte, readers)
+	offsetsCh := make(chan int64, readers)
 
 	wg := sync.WaitGroup{}
 	for i := 0; i < readers; i++ {
@@ -50,15 +48,17 @@ func Read(path string, readers int, chunkSize int64) (chunksCh chan []byte, clos
 			}
 		}()
 	}
-	defer func() {
+	go func() {
 		wg.Wait()
 		close(chunksCh)
 	}()
 
-	for offset := int64(0); offset < stat.Size; offset += chunkSize {
-		offsetsCh <- offset
-	}
-	close(offsetsCh)
+	go func() {
+		for offset := int64(0); offset < stat.Size; offset += chunkSize {
+			offsetsCh <- offset
+		}
+		close(offsetsCh)
+	}()
 
 	return chunksCh, closeFunc, nil
 }
