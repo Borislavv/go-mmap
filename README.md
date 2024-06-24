@@ -4,8 +4,8 @@
 
 
 # How is it fast:
-  - ./main  0,02s user 0,02s system 170% cpu 0,024 total
-  - ./main  0,02s user 0,02s system 169% cpu 0,024 total
-  - ./main  0,02s user 0,02s system 163% cpu 0,025 total
+  - ./main  0,01s user 0,01s system 96% cpu 0,012 total
+  - ./main  0,01s user 0,01s system 99% cpu 0,016 total
+  - ./main  0,01s user 0,01s system 98% cpu 0,021 total
 
-Approximately it's working for 0,025ms.
+Approximately it's working for 0,017ms.
