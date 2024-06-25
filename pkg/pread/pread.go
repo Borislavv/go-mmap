@@ -1,4 +1,4 @@
-package mmap
+package pread
 
 import (
 	"context"
@@ -6,13 +6,7 @@ import (
 	"syscall"
 )
 
-// Read is take a path to file, number of readers and size of chunk.
 func Read(ctx context.Context, path string, readers int, chunkSize int64) (chunksCh chan []byte, closeFunc func(), err error) {
-	pageSize := int64(syscall.Getpagesize())
-	if chunkSize%pageSize != 0 {
-		chunkSize = ((chunkSize / pageSize) + 1) * pageSize
-	}
-
 	fd, err := syscall.Open(path, syscall.O_RDONLY, 0)
 	if err != nil {
 		return nil, nil, err
@@ -24,39 +18,37 @@ func Read(ctx context.Context, path string, readers int, chunkSize int64) (chunk
 		return nil, nil, err
 	}
 
-	data, err := syscall.Mmap(fd, 0, int(stat.Size), syscall.PROT_READ, syscall.MAP_SHARED)
-	if err != nil {
-		func() { _ = syscall.Close(fd) }()
-		return nil, nil, err
-	}
-
 	ctx, cancel := context.WithCancel(ctx)
-
 	closeFunc = func() {
 		cancel()
 		_ = syscall.Close(fd)
-		_ = syscall.Munmap(data)
 	}
 
 	chunksCh = make(chan []byte, readers)
 	offsetsCh := make(chan int64, readers)
 
-	wg := sync.WaitGroup{}
-	for i := 0; i < readers; i++ {
+	wg := &sync.WaitGroup{}
+	for r := 0; r < readers; r++ {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-
 			for offset := range offsetsCh {
+				buffer := make([]byte, chunkSize)
+
 				select {
 				case <-ctx.Done():
 					return
 				default:
-					end := offset + chunkSize
-					if end > stat.Size {
-						end = stat.Size
+					n, err := syscall.Pread(fd, buffer, offset)
+					if err != nil {
+						panic(err)
+					} else if n == 0 {
+						return
+					} else if int64(n) < chunkSize {
+						buffer = buffer[:n]
 					}
-					chunksCh <- data[offset:end]
+
+					chunksCh <- buffer
 				}
 			}
 		}()
