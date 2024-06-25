@@ -1,6 +1,6 @@
 # Reading via Mmap obviously uses syscall.Mmap to improve the efficiency of multi-threaded reading of a file in chunks.
 
-<img width="637" alt="image" src="https://github.com/Borislavv/go-mmap/assets/50691459/3d03350c-643f-41ee-9cc7-394c7dfd627a">
+<img width="666" alt="image" src="https://github.com/Borislavv/go-mmap/assets/50691459/970658c1-0a85-4127-b71a-4da3d1d3364d">
 
 
 # How is it fast:
